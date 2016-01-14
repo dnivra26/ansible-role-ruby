@@ -1,0 +1,58 @@
+---
+- name: install ruby dependencies
+  sudo: yes
+  yum: name={{ item }} state=present
+  with_items:
+    - gcc
+    - mysql-devel
+    - ruby-devel
+    - rubygems
+    - git-core
+    - zlib
+    - zlib-devel
+    - gcc-c++
+    - patch
+    - readline
+    - readline-devel
+    - libyaml-devel
+    - libffi-devel
+    - openssl-devel
+    - make
+    - bzip2
+    - autoconf
+    - automake
+    - libtool
+    - bison
+    - curl
+    - sqlite-devel
+
+- name: create ruby installer directory
+  file: path={{ruby_installer_root}} state=directory
+  sudo: yes
+
+- name: download ruby
+  get_url: url={{ruby_tar_download_url}} dest={{ruby_installer_root}}/ruby-{{ruby_version}}.tar.gz
+  sudo: yes
+  register: download_ruby
+
+- name: unarchive the tar ball
+  sudo: yes
+  unarchive: src={{ruby_installer_root}}/ruby-{{ruby_version}}.tar.gz dest={{ruby_installer_root}} copy=no
+  when: download_ruby|changed
+
+- name: configure, make and make install
+  sudo: yes
+  shell: "{{ item }}"
+  args:
+    chdir: "{{ruby_installer_root}}/ruby-{{ruby_version}}"
+  with_items:
+    - ./configure
+    - make
+    - make install
+  when: download_ruby|changed
+
+- name: install bundler
+  gem: name=bundler state=present user_install=no
+
+- name: add bundle symlink
+  file: src=/usr/local/bin/bundle dest=/usr/bin/bundle state=link

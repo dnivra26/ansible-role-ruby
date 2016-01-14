@@ -1,0 +1,4 @@
+---
+ruby_installer_root: /opt/ruby
+ruby_tar_download_url: https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.0.tar.gz
+ruby_version: 2.3.0

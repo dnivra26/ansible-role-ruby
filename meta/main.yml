@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: Arvind Thangamani
+  description:
+  company: Backstroke Labs
+
+  license: license (BSD)
+  min_ansible_version: 1.7
+  platforms:
+  - name: EL
+   versions:
+   - all
+  categories:
+  - development
+  - system
+
+dependencies: []
